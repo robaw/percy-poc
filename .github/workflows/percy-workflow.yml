@@ -1,0 +1,28 @@
+name: Cypress with Percy workflow
+
+on:
+  # Configure this workflow to trigger on pull requests and pushes to master
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  cypress:
+    name: Cypress with Percy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run cypress
+        uses: cypress-io/github-action@v2
+        with:
+          command-prefix: npx percy exec -- npx
+          start: npm start
+        env:
+          # Inject secrets to the build
+          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
